@@ -8,9 +8,10 @@ class mqConsumer():
         self.n_binding_key = binding_key
         self.n_exchange_name = exchange_name
         self.n_queue_name = queue_name
+        # self.channel= None
         # Call setupRMQConnection
         self.setupRMQConnection()
-        pass
+        
 
     def setupRMQConnection(self) -> None:
         # Set-up Connection to RabbitMQ service
@@ -30,23 +31,23 @@ class mqConsumer():
         )
         # Set-up Callback function for receiving messages
         self.channel.basic_consume(
-            self.n_queue_name, self.on_message_callback(), auto_ack=False
+            self.n_queue_name, self.on_message_callback, auto_ack=False
         )
-        pass
+        
 
     def on_message_callback(self, channel, method_frame, header_frame, body) -> None:
         # Acknowledge message
         channel.basic_ack(method_frame.delivery_tag, False)
         #Print message (The message is contained in the body parameter variable)
         print(f"This is the body {body}")
-        pass
+    
 
     def startConsuming(self) -> None:
         # Print " [*] Waiting for messages. To exit press CTRL+C"
         print(" [*] Waiting for messages. To exit press CTRL+C")
         # Start consuming messages
         self.channel.startConsuming()
-        pass
+       
     
     def __del__(self) -> None:
         # Print "Closing RMQ connection on destruction"
@@ -55,7 +56,7 @@ class mqConsumer():
         self.channel.close()
         # Close Connection
         self.connection.close()
-        pass
+        
 
     
     
